@@ -19,7 +19,12 @@ $Env:Path = "${Env:Path};c:\Program Files (x86)\Git\bin"
 try
 {
     $status = print-docker-machine-status
-
+	
+	if (-not $status)
+	{
+		throw [System.IO.FileNotFoundException] "docker machine called $machineName not found."
+	}
+	
     if($status -eq "Stopped")
     {
         Write-Host -ForegroundColor Green "Starting docker machine called $machineName"
