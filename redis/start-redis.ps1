@@ -45,6 +45,14 @@ catch
 Write-Host -ForegroundColor Yellow "Connecting shell to $machineName"
 $machineConfig = docker-machine env --shell powershell $machineName
 
+if ($machineConfig -eq $null)
+{
+    docker-machine restart $machineName
+    Write-Host -ForegroundColor Yellow "Cert errors for $machineName, regenerating certs..."
+    docker-machine regenerate-certs $machineName
+    $machineConfig = docker-machine env --shell powershell $machineName
+}
+
 $machineConfig
 
 $machineConfig | Invoke-Expression
